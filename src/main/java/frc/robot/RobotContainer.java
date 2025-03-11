@@ -5,8 +5,8 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.ExampleTwoMotor;
+import frc.robot.subsystems.pivot;
+import frc.robot.subsystems.intake;
 import frc.robot.subsystems.driveSubsytem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -20,9 +20,10 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem onemotor = new ExampleSubsystem();
   private final driveSubsytem drive = new driveSubsytem();
-  private final ExampleTwoMotor twomotor = new ExampleTwoMotor();
+  private final pivot pivot = new pivot();
+  private final intake intake = new intake();
+
 
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -47,18 +48,19 @@ public class RobotContainer {
   private void configureBindings() {
 
     //Spin a Thing
-    onemotor.setDefaultCommand(onemotor.setVelocityCommand(0));
-    joystick.a().whileTrue(onemotor.setVelocityCommand(10));
-    joystick.b().whileTrue(onemotor.setVelocityCommand(-10));
 
     //Move a Thing to a certain place
-    twomotor.setDefaultCommand(twomotor.setVelocityCommand(0));
-    joystick.x().whileTrue(twomotor.setPositionCommand(0));
-    joystick.y().whileTrue(twomotor.setPositionCommand(100));
+    pivot.setDefaultCommand(pivot.setVelocityCommand(0));
+    joystick.x().whileTrue(pivot.setPositionCommand(0));
+    joystick.y().whileTrue(pivot.setPositionCommand(100));
 
+     //Move a Thing to a certain place
+     intake.setDefaultCommand(intake.setVelocityCommand(0));
+     joystick.x().whileTrue(intake.setVelocityCommand(1));
+     joystick.y().whileTrue(intake.setVelocityCommand(-1));
     
-    //Tank Drive
-    drive.setDefaultCommand(drive.Tankdrive(joystick.getLeftY(),joystick.getRightY()));
+    //Arcade Drive
+    drive.setDefaultCommand(drive.Arcadedrive(joystick.getLeftY(),joystick.getRightX()));
 
   }
 

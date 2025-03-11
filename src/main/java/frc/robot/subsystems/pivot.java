@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class ExampleTwoMotor extends SubsystemBase {
+public class pivot extends SubsystemBase {
 
   //Create the Variables we will be using
   private SparkMax motorLead;
@@ -31,7 +31,7 @@ public class ExampleTwoMotor extends SubsystemBase {
   private RelativeEncoder encoder;
 
 
-  public ExampleTwoMotor() {
+  public pivot() {
 
     motorLead = new SparkMax(3, MotorType.kBrushless);
     motorFollower = new SparkMax(4, MotorType.kBrushless);
@@ -76,7 +76,7 @@ public class ExampleTwoMotor extends SubsystemBase {
 
         motorConfigFollower
         .apply(motorConfig)
-        .follow(motorLead);
+        .follow(motorLead,true);
 
 
 
@@ -123,6 +123,11 @@ public class ExampleTwoMotor extends SubsystemBase {
 public Command setVelocityCommand(double targetVelocity)
 {
   return run(() -> this.setVelocity(targetVelocity));
+}
+
+public Command intakePositionCommand()
+{
+  return run(() -> this.setPosition(0));
 }
 
 }

@@ -19,26 +19,29 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class ExampleSubsystem extends SubsystemBase {
+public class intake extends SubsystemBase {
 
   //Create the Variables we will be using
-  private SparkMax motor;
+  private SparkMax motorLead;
+  private SparkMax motorFollower;
   private SparkMaxConfig motorConfig;
+  private SparkMaxConfig motorConfigFollower;
+
   private SparkClosedLoopController closedLoopController;
-  private RelativeEncoder encoder;
 
 
-  public ExampleSubsystem() {
+  public intake() {
 
-    motor = new SparkMax(1, MotorType.kBrushless);
-    closedLoopController = motor.getClosedLoopController();
-    encoder = motor.getEncoder();
+    motorLead = new SparkMax(3, MotorType.kBrushless);
+    motorFollower = new SparkMax(4, MotorType.kBrushless);
+    closedLoopController = motorLead.getClosedLoopController();
 
     /*
      * Create a new SPARK MAX configuration object. This will store the
      * configuration parameters for the SPARK MAX that we will set below.
      */
     motorConfig = new SparkMaxConfig();
+    motorConfigFollower = new SparkMaxConfig();
 
     /*
      * Configure the encoder. For this specific example, we are using the
@@ -69,6 +72,12 @@ public class ExampleSubsystem extends SubsystemBase {
         .velocityFF(1.0 / 5767, ClosedLoopSlot.kSlot1)
         .outputRange(-1, 1, ClosedLoopSlot.kSlot1);
 
+        motorConfigFollower
+        .apply(motorConfig)
+        .follow(motorLead,true);
+
+
+
     /*
      * Apply the configuration to the SPARK MAX.
      *
@@ -79,12 +88,11 @@ public class ExampleSubsystem extends SubsystemBase {
      * the SPARK MAX loses power. This is useful for power cycles that may occur
      * mid-operation.
      */
-    motor.configure(motorConfig,  ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+    motorLead.configure(motorConfig,  ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+    motorFollower.configure(motorConfigFollower,  ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+
     
   }
-
-
-
 
   @Override
   public void periodic() {
@@ -94,22 +102,23 @@ public class ExampleSubsystem extends SubsystemBase {
 
   public void setVelocity(double targetVelocity)
   {
-          closedLoopController.setReference(targetVelocity, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
+    closedLoopController.setReference(targetVelocity, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
   }
-
-  public void setPosition(double targetPosition)
-  {
-    closedLoopController.setReference(targetPosition, ControlType.kPosition, ClosedLoopSlot.kSlot0);
-  }
-
-  public Command setPositionCommand()
-{
-  return run(() -> this.setPosition(0));
-}
 
 public Command setVelocityCommand(double targetVelocity)
 {
   return run(() -> this.setVelocity(targetVelocity));
 }
+
+public Command intakeCommand()
+{
+  return run(() -> this.setVelocity(1));
+}
+
+public Command outtakeCommand()
+{
+  return run(() -> this.setVelocity(-0.5));
+}
+
 
 }
