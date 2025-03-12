@@ -33,8 +33,8 @@ public class pivot extends SubsystemBase {
 //Constructor
   public pivot() {
 
-    motorLead = new SparkMax(3, MotorType.kBrushless);
-    motorFollower = new SparkMax(4, MotorType.kBrushless);
+    motorLead = new SparkMax(9, MotorType.kBrushless);
+    motorFollower = new SparkMax(10, MotorType.kBrushless);
     closedLoopController = motorLead.getClosedLoopController();
     encoder = motorLead.getEncoder();
 
