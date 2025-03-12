@@ -9,6 +9,8 @@ import frc.robot.subsystems.pivot;
 import frc.robot.subsystems.intake;
 import frc.robot.subsystems.driveSubsytem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -27,8 +29,8 @@ public class RobotContainer {
 
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController joystick =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  private final CommandPS4Controller joystick =
+      new CommandPS4Controller(0);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -51,13 +53,13 @@ public class RobotContainer {
 
     //Move a Thing to a certain place
     pivot.setDefaultCommand(pivot.setVelocityCommand(0));
-    joystick.x().whileTrue(pivot.setPositionCommand(0));
-    joystick.y().whileTrue(pivot.setPositionCommand(100));
+    joystick.circle().whileTrue(pivot.setPositionCommand(0));
+    joystick.triangle().whileTrue(pivot.setPositionCommand(100));
 
      //Move a Thing to a certain place
      intake.setDefaultCommand(intake.setVelocityCommand(0));
-     joystick.x().whileTrue(intake.setVelocityCommand(1));
-     joystick.y().whileTrue(intake.setVelocityCommand(-1));
+     joystick.cross().whileTrue(intake.setVelocityCommand(1));
+     joystick.square().whileTrue(intake.setVelocityCommand(-1));
     
     //Arcade Drive
     drive.setDefaultCommand(drive.Arcadedrive(joystick.getLeftY(),joystick.getRightX()));
@@ -71,6 +73,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return null;
+    return new SequentialCommandGroup(drive.Arcadedrive(1, 0).withTimeout(0.5),pivot.setPositionCommand(0).withTimeout(1),intake.outtakeCommand().withTimeout(1));
   }
 }

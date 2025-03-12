@@ -30,7 +30,7 @@ public class pivot extends SubsystemBase {
   private SparkClosedLoopController closedLoopController;
   private RelativeEncoder encoder;
 
-
+//Constructor
   public pivot() {
 
     motorLead = new SparkMax(3, MotorType.kBrushless);
@@ -90,10 +90,12 @@ public class pivot extends SubsystemBase {
      * the SPARK MAX loses power. This is useful for power cycles that may occur
      * mid-operation.
      */
+
+    
     motorLead.configure(motorConfig,  ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
     motorFollower.configure(motorConfigFollower,  ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
 
-    
+    encoder.setPosition(0);
   }
 
 
@@ -102,14 +104,17 @@ public class pivot extends SubsystemBase {
   @Override
   public void periodic() {
 
+    SmartDashboard.putNumber("Pivot Encoder : ", encoder.getPosition());
     // This method will be called once per scheduler run
   }
 
+  //METHOD
   public void setVelocity(double targetVelocity)
   {
     closedLoopController.setReference(targetVelocity, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
   }
 
+  //METHOD
   public void setPosition(double targetPosition)
   {
     closedLoopController.setReference(targetPosition, ControlType.kPosition, ClosedLoopSlot.kSlot0);
